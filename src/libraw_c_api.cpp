@@ -426,6 +426,14 @@ extern "C"
     return lr->color.maximum;
   }
 
+  // for JS bridge
+  DllDef ushort *libraw_get_raw_image(libraw_data_t *lr)
+  {
+    if (!lr)
+      return NULL;
+    return lr->rawdata.raw_image;
+  }
+
 #ifdef __cplusplus
 }
 #endif
