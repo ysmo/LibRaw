@@ -1,4 +1,4 @@
-all: library all_samples
+all: library #all_samples
 
 #CFLAGS=-arch i386 -arch x86_64 -O3  -I. -w
 CFLAGS=-O2  -I. -w 
@@ -187,7 +187,7 @@ lib/libraw_r.a: ${LIB_MT_OBJECTS}
 	ranlib lib/libraw_r.a
 
 lib/libraw.wasm: ${LIB_OBJECTS}
-	emcc -O2 -o lib/libraw.js -s LINKABLE=1 -s EXPORT_ALL=1 -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
+	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s LINKABLE=1 -s EXPORT_ALL=1 -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 
 clean:
 	rm -fr bin/*.dSYM
