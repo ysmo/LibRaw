@@ -1,7 +1,7 @@
 all: library #all_samples
 
 #CFLAGS=-arch i386 -arch x86_64 -O3  -I. -w
-CFLAGS=-O2  -I. -w 
+CFLAGS=-O2  -I. -w -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s 'EXPORTED_FUNCTIONS=["_libraw_open_buffer"]'
 CC=emcc
 CXX=em++
 
@@ -187,7 +187,7 @@ lib/libraw_r.a: ${LIB_MT_OBJECTS}
 	ranlib lib/libraw_r.a
 
 lib/libraw.wasm: ${LIB_OBJECTS}
-	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s LINKABLE=1 -s EXPORT_ALL=1 -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
+	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s 'EXPORTED_FUNCTIONS=["_libraw_open_buffer","_libraw_init","_libraw_unpack","_libraw_raw2image","_libraw_dcraw_process","_libraw_dcraw_make_mem_image","_libraw_get_raw_image"]' -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 
 clean:
 	rm -fr bin/*.dSYM
