@@ -187,7 +187,9 @@ lib/libraw_r.a: ${LIB_MT_OBJECTS}
 	ranlib lib/libraw_r.a
 
 lib/libraw.wasm: ${LIB_OBJECTS}
-	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s 'EXPORTED_FUNCTIONS=["_libraw_open_buffer","_libraw_init","_libraw_unpack","_libraw_raw2image","_libraw_dcraw_process","_libraw_dcraw_make_mem_image","_libraw_get_raw_image"]' -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
+	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 -s 'EXPORT_NAME="createLibRaw"' -s 'EXPORTED_FUNCTIONS=["_libraw_open_buffer", \
+		"_libraw_init","_libraw_unpack","_libraw_raw2image","_libraw_dcraw_process","_libraw_dcraw_make_mem_image","_libraw_get_raw_image",\
+		"_libraw_set_use_camera_wb"]' -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 
 clean:
 	rm -fr bin/*.dSYM

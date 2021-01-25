@@ -433,6 +433,12 @@ extern "C"
       return NULL;
     return lr->rawdata.raw_image;
   }
+  DllDef void libraw_set_use_camera_wb(libraw_data_t *lr, int value)
+  {
+    if (!lr)
+      return;
+    lr->params.use_camera_wb = value;
+  }
 
 #ifdef __cplusplus
 }
