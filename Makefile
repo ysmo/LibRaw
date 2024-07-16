@@ -192,9 +192,10 @@ lib/libraw_r.a: ${LIB_MT_OBJECTS}
 # 		"_libraw_set_use_camera_wb"]' -s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 
 lib/libraw.wasm: ${LIB_OBJECTS}
-	emcc -o lib/libraw.js -s MODULARIZE=1 \
+	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 \
 	-s 'EXPORT_NAME="createLibRaw"' \
 	-s 'EXPORTED_RUNTIME_METHODS=["callMain", "FS"]' \
+	-s INVOKE_RUN=0 \
 	-s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 
 clean:
