@@ -1,0 +1,60 @@
+<!doctype html>
+<body>
+  
+      <h1>Convert CR2 to JPG</h1>
+      <h2>Select a File!</h2>
+    <input type="file" id="upload" accept=".cr2,.cr3,.arw,.nef" />
+
+<br /> 
+    <img id="output" style="max-width: 500px; max-height: 300px;" />
+
+  <br />
+    <div id="info"></div>
+<script     src="libraw.js"></script>
+<script>
+  createLibRaw().then((i) => { 
+        const Module = i;  
+    const libraw = i;
+    const FS = Module.FS;
+  let el = document.querySelector('h2');
+    const upload = document.getElementById('upload'); 
+    const preview = document.getElementById('output');
+ 
+            const info = document.getElementById('info');
+    upload.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }  
+        const reader = new FileReader();
+        reader.onload = async (e) => { 
+            const data = new Uint8Array(e.target.result); 
+          FS.mkdir("/workspace");
+          FS.chdir("/workspace");  
+          FS.writeFile("raw_file_buffer", data);
+
+          el.innerText = "Processing...";
+          // The buffer is stored in FS. Pass a reference to its name.
+          Module.callMain(["-e", "raw_file_buffer"]);
+          const extracted = FS.readFile("raw_file_buffer.thumb.jpg", {encoding: "binary"});
+          // Cleanup
+          if (extracted && data) {
+            ["raw_file_buffer", "raw_file_buffer.thumb.jpg"].forEach(item => {
+              FS.unlink(item);
+            })
+          }
+          FS.chdir("/");
+          FS.rmdir("/workspace");
+
+          // Now use `extracted` to create an image Blob to be used in the browser
+          const blob = new Blob([extracted], {type: "image/jpeg"});
+          const imageUrl = URL.createObjectURL(blob);
+          output.src = imageUrl;
+        };
+        reader.readAsArrayBuffer(file);
+    });  
+});
+</script>
+
+</body>
+</html>
