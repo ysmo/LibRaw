@@ -1,2 +1,8 @@
 lib/*
 object/*
+*.o
+bin
+*.lo
+src/metadata/.deps
+*.Plo
+*.dirstamp
