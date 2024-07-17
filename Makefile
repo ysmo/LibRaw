@@ -194,7 +194,8 @@ lib/libraw_r.a: ${LIB_MT_OBJECTS}
 lib/libraw.wasm: ${LIB_OBJECTS}
 	emcc -O2 -o lib/libraw.js -s MODULARIZE=1 \
 	-s 'EXPORT_NAME="createLibRaw"' \
-	-s 'EXPORTED_RUNTIME_METHODS=["callMain", "FS"]' \
+	-s 'EXPORTED_FUNCTIONS=["_main", '_malloc', '_free']' \
+	-s 'EXPORTED_RUNTIME_METHODS=["callMain", "FS", 'UTF8ToString', 'lengthBytesUTF8', 'stringToUTF8']' \
 	-s INVOKE_RUN=0 \
 	-s ALLOW_MEMORY_GROWTH=1 ${LIB_OBJECTS}
 

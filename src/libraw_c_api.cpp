@@ -33,6 +33,19 @@ it under the terms of the one of two licenses as you choose:
 #ifdef LIBRAW_WIN32_CALLS
 #define snprintf _snprintf
 #endif
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+// Function to get the current URL (only works in a browser context)
+EM_JS(char *, get_current_url, (), {
+  var url = window.location.href;
+  var lengthBytes = lengthBytesUTF8(url) + 1;
+  var stringOnWasmHeap = _malloc(lengthBytes);
+  stringToUTF8(url, stringOnWasmHeap, lengthBytes);
+  return stringOnWasmHeap;
+});
+
 int my_progress_callback(void *unused_data, enum LibRaw_progress state,
                          int iter, int expected)
 {
@@ -56,6 +69,30 @@ char *customCameras[] = {
 
 int main(int ac, char *av[])
 {
+
+  const char *url = get_current_url();
+  const char *allowed_domains[] = {"http://localhost",
+                                   "https://sub.example.com",
+                                   "https://anotherdomain.com", NULL};
+  int allowed = 0;
+
+  for (int i = 0; allowed_domains[i] != NULL; i++)
+  {
+    if (strstr(url, allowed_domains[i]) != NULL)
+    {
+      allowed = 1;
+      break;
+    }
+  }
+
+  if (!allowed)
+  {
+    printf("%s Access denied for URL: %s\n", LibRaw::version(), url);
+    delete url;
+    return 1; // Exit if domain is not allowed
+  }
+  delete url;
+
   int i, ret, verbose = 0, output_thumbs = 0, output_all_thumbs = 0;
 
   // don't use fixed size buffers in real apps!
